@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADMIN DECODE IMAGE // SHA-256 TERMINAL</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --neon-green: #00ff66;
+            --neon-cyan: #00f3ff;
+            --neon-amber: #ffaa00;
+            --neon-red: #ff0055;
+            --dark-bg: #03080c;
+            --panel-bg: rgba(6, 16, 24, 0.9);
+            --border-glow: rgba(0, 243, 255, 0.35);
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #a0f0d0;
+            font-family: 'Fira Code', monospace;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 50% 50%, rgba(0, 40, 30, 0.45) 0%, rgba(3, 8, 12, 1) 100%),
+                linear-gradient(rgba(0, 255, 102, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 102, 0.025) 1px, transparent 1px);
+            background-size: 100% 100%, 24px 24px, 24px 24px;
+        }
+
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* CRT Scanline FX Overlay */
+        .crt::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05));
+            z-index: 50;
+            background-size: 100% 3px, 6px 100%;
+            pointer-events: none;
+            opacity: 0.85;
+        }
+
+        .crt::after {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: rgba(18, 16, 16, 0.1);
+            opacity: 0;
+            z-index: 50;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.25; }
+            50% { opacity: 0.20; }
+            100% { opacity: 0.26; }
+        }
+
+        .cyber-border {
+            border: 1px solid var(--border-glow);
+            box-shadow: 0 0 18px rgba(0, 243, 255, 0.12), inset 0 0 15px rgba(0, 243, 255, 0.04);
+            position: relative;
+        }
+
+        .cyber-border::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px;
+            width: 12px; height: 12px;
+            border-top: 2px solid var(--neon-cyan);
+            border-left: 2px solid var(--neon-cyan);
+        }
+
+        .cyber-border::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; right: -2px;
+            width: 12px; height: 12px;
+            border-bottom: 2px solid var(--neon-cyan);
+            border-right: 2px solid var(--neon-cyan);
+        }
+
+        .text-glow-green { text-shadow: 0 0 8px rgba(0, 255, 102, 0.6); }
+        .text-glow-cyan { text-shadow: 0 0 8px rgba(0, 243, 255, 0.6); }
+        .text-glow-red { text-shadow: 0 0 8px rgba(255, 0, 85, 0.7); }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(3, 8, 12, 0.8); }
+        ::-webkit-scrollbar-thumb { background: #00f3ff44; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00f3ff; }
+
+        .glitch-anim {
+            animation: glitch 0.8s linear infinite;
+        }
+        @keyframes glitch {
+            2%, 64% { transform: translate(2px, 0) skew(0deg); }
+            4%, 60% { transform: translate(-2px, 0) skew(0deg); }
+            62% { transform: translate(0, 0) skew(3deg); }
+        }
+    </style>
+</head>
+<body class="crt min-h-screen flex flex-col p-3 md:p-6 select-none">
+
+    <header class="flex flex-col md:flex-row justify-between items-center mb-6 pb-4 border-b border-cyan-900/50 gap-4">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-cyan-950/80 border border-cyan-500/50 flex items-center justify-center text-cyan-400 text-xl shadow-[0_0_15px_rgba(0,243,255,0.3)]">
+                <i class="fa-solid fa-user-shield animate-pulse"></i>
+            </div>
+            <div>
+                <h1 class="font-orbitron text-2xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500">
+                    ADMIN DECODE IMAGE
+                </h1>
+                <p class="text-xs text-cyan-600 tracking-wider">HARDCODED SHA-256 BINARY AUTHENTICATION PROTOCOL</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3 text-xs">
+            <div class="bg-cyan-950/40 border border-cyan-800/40 px-3 py-1.5 rounded flex items-center gap-2">
+                <span id="status-dot" class="inline-block w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                <span class="text-red-400 font-bold" id="system-status">SYS_LOCKED</span>
+            </div>
+
+            <button id="audio-toggle" class="bg-slate-900 hover:bg-slate-800 border border-cyan-700/50 px-3 py-1.5 rounded text-cyan-400 transition-colors flex items-center gap-2">
+                <i class="fa-solid fa-volume-high" id="audio-icon"></i>
+                <span id="audio-label">AUDIO: ON</span>
+            </button>
+
+            <button id="crt-toggle" class="bg-slate-900 hover:bg-slate-800 border border-cyan-700/50 px-3 py-1.5 rounded text-cyan-400 transition-colors flex items-center gap-2">
+                <i class="fa-solid fa-tv"></i>
+                <span>CRT FX</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-7xl mx-auto w-full">
+
+        <!-- Left Column: Key Dropzone & Hash Verification Matrix -->
+        <section class="lg:col-span-4 flex flex-col gap-5">
+
+            <!-- Upload Panel -->
+            <div class="cyber-border bg-slate-950/80 p-5 rounded-lg flex flex-col gap-4">
+                <div class="flex justify-between items-center border-b border-cyan-900/40 pb-2">
+                    <h2 class="font-orbitron text-sm text-cyan-400 tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-key"></i> CODE IMAGE UPLOAD
+                    </h2>
+                    <span class="text-[10px] text-slate-500 font-mono">SHA-256 VERIFIED</span>
+                </div>
+
+                <!-- Dropzone Input -->
+                <div id="drop-zone" class="border-2 border-dashed border-cyan-700/50 hover:border-cyan-400 bg-cyan-950/20 hover:bg-cyan-950/40 transition-all rounded-lg p-6 text-center cursor-pointer flex flex-col items-center justify-center gap-3 relative group">
+                    <input type="file" id="image-input" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer z-10">
+                    <div class="w-12 h-12 rounded-full bg-cyan-900/30 border border-cyan-500/40 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-file-circle-check text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-cyan-300 font-bold">UPLOAD ADMIN CODE IMAGE</p>
+                        <p class="text-[10px] text-slate-400 mt-1">Select or drag & drop the target security image file</p>
+                    </div>
+                </div>
+
+                <!-- Image Key Preview & Hash Telemetry -->
+                <div class="border border-slate-800 bg-black/60 rounded p-3 flex flex-col gap-2">
+                    <div class="flex justify-between items-center text-[11px]">
+                        <span class="text-slate-400">KEY IMAGE CANVAS</span>
+                        <span id="key-dimensions" class="text-slate-500">---</span>
+                    </div>
+
+                    <div class="flex gap-3 items-center">
+                        <div class="w-24 h-24 bg-black border border-cyan-800/80 rounded overflow-hidden flex items-center justify-center relative">
+                            <canvas id="preview-canvas" width="128" height="128" class="w-full h-full object-contain"></canvas>
+                            <div id="canvas-overlay" class="absolute inset-0 bg-red-900/30 flex items-center justify-center text-red-400 text-[10px] font-bold text-center p-1">
+                                NO FILE LOADED
+                            </div>
+                        </div>
+
+                        <div class="flex-1 flex flex-col justify-between h-24 text-[11px] font-mono">
+                            <div class="space-y-1">
+                                <div class="text-slate-400 text-[10px]">RAW FILE SHA-256 HASH:</div>
+                                <div id="hash-display" class="text-[8px] text-cyan-400 break-all bg-slate-900/90 p-1.5 rounded border border-cyan-950 font-mono">
+                                    ----------------------------------------------------------------
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center text-[10px]">
+                                <span class="text-slate-500">STATUS:</span>
+                                <span id="clearance-badge" class="px-1.5 py-0.5 rounded bg-red-950 text-red-400 border border-red-800">LOCKED</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="cyber-border bg-slate-950/80 p-4 rounded-lg flex flex-col gap-3">
+                <h3 class="font-orbitron text-xs text-cyan-400 tracking-wider border-b border-cyan-900/40 pb-1">
+                    <i class="fa-solid fa-microchip"></i> CRYPTO DECODE TELEMETRY
+                </h3>
+
+                <div class="space-y-2 text-xs">
+                    <div>
+                        <div class="flex justify-between text-[11px] text-slate-400 mb-1">
+                            <span>DECRYPTION MATRIX</span>
+                            <span id="progress-percent" class="text-cyan-400">0%</span>
+                        </div>
+                        <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden border border-cyan-900">
+                            <div id="decryption-bar" class="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 w-0 transition-all duration-300"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 text-[10px] pt-1">
+                        <div class="bg-slate-900/60 p-2 rounded border border-slate-800">
+                            <div class="text-slate-500 uppercase">USER PASS</div>
+                            <div id="user-pass-status" class="text-red-400 font-bold mt-0.5">LOCKED (AES-256)</div>
+                        </div>
+                        <div class="bg-slate-900/60 p-2 rounded border border-slate-800">
+                            <div class="text-slate-500 uppercase">ADMIN PASS</div>
+                            <div id="admin-pass-status" class="text-red-400 font-bold mt-0.5">LOCKED (ADMIN XOR)</div>
+                        </div>
+                    </div>
+
+                    <div class="p-2 bg-slate-900/40 rounded border border-cyan-950 text-[9px] text-slate-400">
+                        <div class="text-slate-500 font-bold mb-0.5">TARGET HASH:</div>
+                        <div class="text-cyan-500/80 font-mono break-all">eddd723c53ce48958f01bb57eabb604f14e0e54329a9d425dfeb3668403a7f3d</div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Right Column: Console Terminal Screen -->
+        <section class="lg:col-span-8 flex flex-col gap-4">
+
+            <div class="cyber-border bg-slate-950/90 rounded-lg flex-1 flex flex-col h-[580px] lg:h-auto overflow-hidden">
+
+                <!-- Screen Header -->
+                <div class="bg-slate-900/80 px-4 py-2.5 border-b border-cyan-900/60 flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
+                        <span class="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
+                        <span class="w-3 h-3 rounded-full bg-green-500/80 inline-block"></span>
+                        <span class="text-xs font-mono text-slate-400 ml-2" id="prompt-prefix">GUEST@TERMINAL-NODE:~#</span>
+                    </div>
+
+                    <div class="text-[10px] text-cyan-400 font-mono tracking-widest flex items-center gap-2">
+                        <i class="fa-solid fa-lock" id="lock-icon"></i>
+                        <span id="cipher-mode">CIPHER: DUAL-PASS AES-GCM</span>
+                    </div>
+                </div>
+
+                <!-- Console Display Screen -->
+                <div id="terminal-screen" class="flex-1 p-4 overflow-y-auto font-mono text-xs md:text-sm space-y-2 bg-black/80 text-emerald-400 leading-relaxed">
+                    <!-- Dynamic logs/terminal text rendered here -->
+                </div>
+
+                <!-- Input Row -->
+                <div class="bg-slate-950 p-3 border-t border-cyan-900/50 flex items-center gap-2">
+                    <span class="text-cyan-400 font-bold">$</span>
+                    <input type="text" id="terminal-input" placeholder="Upload key image or type 'help'..." class="flex-1 bg-transparent border-none outline-none text-emerald-300 font-mono text-xs md:text-sm placeholder-slate-600" autocomplete="off" spellcheck="false">
+                    <button id="send-cmd-btn" class="text-xs bg-cyan-950 hover:bg-cyan-900 border border-cyan-700 text-cyan-400 px-3 py-1 rounded">EXEC</button>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+        // Exact SHA-256 target hash requested by user
+        const TARGET_SHA256 = 'eddd723c53ce48958f01bb57eabb604f14e0e54329a9d425dfeb3668403a7f3d'.toLowerCase();
+        const TERMINAL_TEXTS_RAW = `#>>>corruptHeader<<<#
+CRITICAL: ADMIN TERMINAL ENCRYPTED. MATCHING SHA-256 IMAGE REQUIRED!
+#>>>initialLocked<<<#
+==========================================================================================
+ [LOCKED] CLASSIFIED SYSTEM ENCRYPTED // ADMIN TERMINAL OFFLINE
+==========================================================================================
+ALL TERMINAL TEXT IS DOUBLE-ENCRYPTED USING AES-256 MATRIX CIPHERS.
+YOU MUST PROVIDE THE REQUISITE 'ADMIN DECODE IMAGE' TO ACCESS TERMINAL.
+
+REQUIREMENT:
+  - TARGET SHA-256: eddd723c53ce48958f01bb57eabb604f14e0e54329a9d425dfeb3668403a7f3d
+  - AUTHENTICATION: LOCAL FILE DIGEST VERIFICATION
+
+TYPE 'help' FOR COMMAND DIRECTORY.
+#>>>lockedError<<<#
+ERROR: ADMIN TERMINAL LOCKED.
+IMAGE WITH SHA-256 HASHER REQUIREMENT NEEDED.
+TARGET: eddd723c53ce48958f01bb57eabb604f14e0e54329a9d425dfeb3668403a7f3d
+TYPE 'clear' TO RESET DISPLAY.
+#>>>decryptInit<<<#
+[INITIATING ADMIN DECRYPTION SEQUENCE...]
+[USER PASS 1/2]: DECRYPTED USER VECTOR.
+#>>>cmdHelp<<<#
+=== ADMIN COMMAND INDEX ===
+  status      - Show neural core diagnostic breakdown
+  staff_audit - View staff performance watchlist & termination threats
+  logs        - View confidential security event history
+  classified  - Extract encrypted vault payload & directives
+  clear       - Clear console display
+  purge       - Emergency lock & clear session key
+#>>>cmdStatus<<<#
+--- ADMIN CORE DIAGNOSTICS ---
+CPU LOAD     : 11.8% [STABLE]
+CIPHER STATE : DUAL-PASS DECRYPTED
+SECURITY     : VERIFIED STRICT SHA-256 ACCESS
+TARGET HASH  : eddd723c53ce48958f01bb57eabb604f14e0e54329a9d425dfeb3668403a7f3d
+#>>>cmdStaff<<<#
+--- CLASSIFIED STAFF PERFORMANCE WATCHLIST ---
+[FLAGGED] Tech-119       : Quota shortage - 14% below expected yield. Warning issued.
+[FLAGGED] Operator-402   : Log delay incident. Quota extended to 14 hrs/day.
+[HIGH RISK] Manager Vance: Sector 3 latency unacceptable. Termination pending in 72h.
+#>>>cmdLogs<<<#
+--- CONFIDENTIAL SECURITY LOGS ---
+[LOG 001] AUTH REQ RECEIVED FROM LOCAL FILE UPLOAD
+[LOG 002] RAW ARRAYBUFFER COMPUTED WITH SHA-256
+[LOG 003] MATCHED TARGET eddd723c53ce48958f01bb57eabb604f14e0e54329a9d425dfeb3668403a7f3d
+[LOG 004] DOUBLE PASS DECRYPTION EXECUTED - ADMIN ACCESS GRANTED
+#>>>classified<<<#
+==========================================================================================
+ [ADMIN CLEARANCE] HIGH EXECUTIVE DIRECTIVE // CLASSIFIED EYES-ONLY DOSSIER
+==========================================================================================
+
+ [SECTION I: EXECUTIVE PERFORMANCE & PERSONNEL DIRECTIVE]
+ AUTHOR: Executive Board / OMEGA Node Oversight
+ NOTICE: TOP SECRET DIRECTIVE. UNAUTHORIZED DISCLOSURE PENALIZED BY IMMEDIATE PURGE.
+
+  1. PERFORMANCE MANDATE & TERMINATION WARNINGS:
+     - Sector 3 and Sector 7 operational throughput has dropped by 18.4% this quarter.
+     - Shift Supervisors and Technicians are demonstrating unacceptable latency
+       in containment response cycles.
+     - EFFECTIVE IMMEDIATELY: Any staff operator failing to meet the revised 14-hour daily
+       quota will be flagged for immediate contract termination.
+     - Personnel currently on watchlist: Operator-402, Tech-119, Lead Shift Manager V. Vance.
+     - If performance metrics in Sector 3 do not normalize within 72 hours, Vance will be
+       demoted to Sub-Level Sanitation with zero severance.
+
+  2. UNCOMPROMISING WORK ETHIC STANDARDS:
+     - We do not tolerate complacency. Exhaustion is no longer a valid cause for log delays.
+     - Medical exemptions regarding Neural-Sync headaches are strictly voided.
+     - Employees complaining about shift durations will be reassigned to hazardous containment.
+
+------------------------------------------------------------------------------------------
+
+ [SECTION II: PROJECT GHOST_PULSE - TOP SECRET TECHNICAL BRIEFING]
+ CLASSIFICATION : EYES-ONLY // ZERO EXPIRATION
+
+  * INCIDENT SUMMARY - SUB-LEVEL 9 ANOMALY:
+    On 04:12 UTC, Quantum Core-04 experienced a 340ms breach during Phase-3 Neural Uplink.
+    Sub-Level 9 containment doors auto-sealed. Three automated drones were deployed to neutral-
+    ize the localized bio-synthetic spike.
+
+  * CLASSIFIED DISCOVERY:
+    The 'Ghost_Pulse' entity is actively communicating through secondary telemetry lines.
+    It has begun mapping facility network nodes. Facility operators must remain unaware.
+
+  * CONTAINMENT PROTOCOL OMEGA-9:
+    - If network sync exceeds 94%, initiate localized oxygen purge in Sub-Level 9.
+    - Disregard general staff present inside Sub-Level 9 during emergency purge cycles.
+    - Protect the Master Key image at all costs; if compromised, trigger full site wipe.
+
+------------------------------------------------------------------------------------------
+
+ [SECTION III: CONFIDENTIAL INCIDENT LOGS & AUDIT TRAIL]
+  [03:11:02] Log-309: Staff attempt to access Sub-Level 9 denied. Memory wiped per Protocol B.
+  [05:44:19] Log-312: Executive Director ordered immediate quota increase across all assembly lines.
+  [07:12:55] Log-318: Neural-Sync anomaly spike detected. Sector 4 quarantined for 45 minutes.
+  [08:32:01] Log-322: Target SHA-256 presented. Double-pass decryption executed successfully.
+
+==========================================================================================
+ [ADMIN COMMANDS]
+  help        - Display complete command index
+  status      - Show neural core diagnostic breakdown & load metrics
+  staff_audit - View staff performance watchlist & termination threats
+  logs        - View confidential security event history & audit trails
+  classified  - Re-render this full executive briefing & dossier
+  clear       - Clear console display buffer
+  purge       - Emergency lock & clear active session key
+==========================================================================================`;
+
+        // Splits the single block into named messages. No need to touch this.
+        const TERMINAL_TEXTS = (() => {
+            const parts = TERMINAL_TEXTS_RAW.split(/^#>>>(\w+)<<<#$/m);
+            const out = {};
+            for (let i = 1; i < parts.length; i += 2) {
+                out[parts[i]] = parts[i + 1].replace(/^\n/, '').replace(/\n$/, '');
+            }
+            return out;
+        })();
+
+        // System State Management
+        const STATE = {
+            isAdminUnlocked: false,
+            audioEnabled: true,
+            currentRawHash: null,
+            currentPixelHash: null
+        };
+
+        // Web Audio Synthesizer
+        class SoundFX {
+            constructor() {
+                this.ctx = null;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    const AC = window.AudioContext || window.webkitAudioContext;
+                    if (AC) this.ctx = new AC();
+                }
+            }
+
+            playBeep(freq = 800, type = 'sine', duration = 0.05) {
+                if (!STATE.audioEnabled) return;
+                try {
+                    this.init();
+                    if (!this.ctx) return;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                    gain.gain.setValueAtTime(0.03, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + duration);
+                } catch(e){}
+            }
+
+            playDeny() {
+                if (!STATE.audioEnabled) return;
+                try {
+                    this.init();
+                    if (!this.ctx) return;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(60, this.ctx.currentTime + 0.3);
+                    gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.3);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + 0.3);
+                } catch(e){}
+            }
+
+            playSuccess() {
+                if (!STATE.audioEnabled) return;
+                try {
+                    this.init();
+                    if (!this.ctx) return;
+                    const now = this.ctx.currentTime;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.setValueAtTime(880, now + 0.1);
+                    gain.gain.setValueAtTime(0.05, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(now + 0.3);
+                } catch(e){}
+            }
+        }
+
+        const audio = new SoundFX();
+
+        function generateGarbleText(str) {
+            const chars = "▓▒░█#$@%&*!01XØÆ§µ∆∇?#@%!&$";
+            return str.split('').map(c => {
+                if (c === ' ' || c === '\n') return c;
+                return chars[Math.floor(Math.random() * chars.length)];
+            }).join('');
+        }
+
+        const terminalScreen = document.getElementById('terminal-screen');
+        const terminalInput = document.getElementById('terminal-input');
+        const sendCmdBtn = document.getElementById('send-cmd-btn');
+        const imageInput = document.getElementById('image-input');
+        const previewCanvas = document.getElementById('preview-canvas');
+        const canvasOverlay = document.getElementById('canvas-overlay');
+        const hashDisplay = document.getElementById('hash-display');
+        const clearanceBadge = document.getElementById('clearance-badge');
+        const decryptionBar = document.getElementById('decryption-bar');
+        const progressPercent = document.getElementById('progress-percent');
+        const userPassStatus = document.getElementById('user-pass-status');
+        const adminPassStatus = document.getElementById('admin-pass-status');
+        const systemStatus = document.getElementById('system-status');
+        const statusDot = document.getElementById('status-dot');
+        const promptPrefix = document.getElementById('prompt-prefix');
+        const keyDimensions = document.getElementById('key-dimensions');
+        const audioToggle = document.getElementById('audio-toggle');
+        const audioLabel = document.getElementById('audio-label');
+        const audioIcon = document.getElementById('audio-icon');
+        const crtToggle = document.getElementById('crt-toggle');
+
+        // Calculate ArrayBuffer SHA-256 hash using browser Web Crypto API
+        async function calculateBufferSHA256(arrayBuffer) {
+            const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toLowerCase();
+        }
+
+        // Calculate Canvas Pixel Data SHA-256 hash
+        async function calculateCanvasSHA256(canvas) {
+            const ctx = canvas.getContext('2d');
+            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', imgData.data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toLowerCase();
+        }
+
+        function writeToTerminal(lines, isGarbled = false, speed = 15) {
+            if (typeof lines === 'string') lines = lines.split('\n');
+            if (!Array.isArray(lines)) lines = [lines];
+
+            lines.forEach((lineText, idx) => {
+                setTimeout(() => {
+                    const p = document.createElement('div');
+                    p.className = isGarbled ? 'text-red-400/80 font-mono text-xs break-all glitch-anim' : 'text-emerald-400 font-mono text-xs md:text-sm';
+                    p.textContent = isGarbled ? generateGarbleText(lineText) : lineText;
+                    terminalScreen.appendChild(p);
+                    terminalScreen.scrollTop = terminalScreen.scrollHeight;
+                    audio.playBeep(1200, 'sine', 0.02);
+                }, idx * speed);
+            });
+        }
+
+        function renderCorruptedTerminal() {
+            terminalScreen.innerHTML = '';
+            const headerP = document.createElement('div');
+            headerP.className = "text-red-500 font-bold text-sm mb-3 border-b border-red-900/50 pb-2 flex items-center gap-2 text-glow-red";
+            headerP.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${TERMINAL_TEXTS.corruptHeader}`;
+            terminalScreen.appendChild(headerP);
+
+            TERMINAL_TEXTS.initialLocked.split('\n').slice(0, 22).forEach(line => {
+                const garbledLine = generateGarbleText(line);
+                const p = document.createElement('div');
+                p.className = "text-red-400/60 font-mono text-xs break-all select-none my-0.5";
+                p.textContent = `[ENCRYPTED-ADMIN]: ${garbledLine}`;
+                terminalScreen.appendChild(p);
+            });
+        }
+
+        async function processFileKey(file) {
+            audio.playBeep(600, 'square', 0.1);
+
+            // 1. Read Raw Binary ArrayBuffer to calculate direct file SHA-256
+            const arrayBuffer = await file.arrayBuffer();
+            const rawFileHash = await calculateBufferSHA256(arrayBuffer);
+            STATE.currentRawHash = rawFileHash;
+            hashDisplay.textContent = rawFileHash;
+
+            // 2. Render Image to Canvas
+            const img = new Image();
+            const objectUrl = URL.createObjectURL(file);
+
+            img.onload = async function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+
+                // Render Preview Canvas UI
+                const pCtx = previewCanvas.getContext('2d');
+                pCtx.clearRect(0, 0, 128, 128);
+                pCtx.drawImage(canvas, 0, 0, 128, 128);
+                canvasOverlay.style.display = 'none';
+                keyDimensions.textContent = `${canvas.width}x${canvas.height}px`;
+
+                // Calculate pixel matrix hash as dual check
+                const pixelHash = await calculateCanvasSHA256(canvas);
+                STATE.currentPixelHash = pixelHash;
+
+                // Validate hash against target
+                const isMatch = (rawFileHash === TARGET_SHA256 || pixelHash === TARGET_SHA256);
+
+                if (isMatch) {
+                    STATE.isAdminUnlocked = true;
+                    clearanceBadge.textContent = "ADMIN ACCESS GRANTED";
+                    clearanceBadge.className = "px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700 font-bold text-glow-green";
+                    systemStatus.textContent = "SYS_UNLOCKED (ADMIN)";
+                    systemStatus.className = "text-emerald-400 font-bold animate-pulse";
+                    statusDot.className = "inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping";
+                    promptPrefix.textContent = "ADMIN@OMEGA-NODE:~#";
+                    audio.playSuccess();
+                    triggerAdminDecryptionPass(rawFileHash);
+                } else {
+                    STATE.isAdminUnlocked = false;
+                    clearanceBadge.textContent = "LOCKED";
+                    clearanceBadge.className = "px-1.5 py-0.5 rounded bg-red-950 text-red-400 border border-red-700 font-bold";
+                    systemStatus.textContent = "SYS_LOCKED";
+                    systemStatus.className = "text-red-400 font-bold";
+                    statusDot.className = "inline-block w-2 h-2 rounded-full bg-red-500 animate-ping";
+                    promptPrefix.textContent = "GUEST@TERMINAL-NODE:~#";
+                    audio.playDeny();
+
+                    decryptionBar.style.width = '0%';
+                    progressPercent.textContent = '0%';
+                    userPassStatus.textContent = "FAILED (HASH MISMATCH)";
+                    userPassStatus.className = "text-red-400 font-bold mt-0.5";
+                    adminPassStatus.textContent = "LOCKED";
+                    adminPassStatus.className = "text-red-400 font-bold mt-0.5";
+
+                    renderCorruptedTerminal();
+                    const errDiv = document.createElement('div');
+                    errDiv.className = "mt-4 p-3 bg-red-950/80 border border-red-500 text-red-300 font-bold text-xs rounded text-glow-red space-y-1";
+                    errDiv.innerHTML = `
+                        <div>>> ACCESS DENIED: INVALID KEY HASH.</div>
+                        <div class="text-[10px] text-slate-400 font-mono">FILE HASH: ${rawFileHash}</div>
+                        <div class="text-[10px] text-cyan-400 font-mono">EXPECTED : ${TARGET_SHA256}</div>
+                    `;
+                    terminalScreen.appendChild(errDiv);
+                }
+
+                URL.revokeObjectURL(objectUrl);
+            };
+
+            img.src = objectUrl;
+        }
+
+        function triggerAdminDecryptionPass(keyHash) {
+            terminalScreen.innerHTML = '';
+
+            writeToTerminal([
+                TERMINAL_TEXTS.decryptInit.split('\n')[0],
+                `[SHA-256 HASH CHECK]: VERIFIED ${keyHash}`,
+                "--------------------------------------------------"
+            ], false, 20);
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 5;
+                decryptionBar.style.width = `${progress}%`;
+                progressPercent.textContent = `${progress}%`;
+
+                audio.playBeep(400 + progress * 8, 'sine', 0.02);
+
+                if (progress === 50) {
+                    userPassStatus.textContent = "PASSED (SHA-256 VERIFIED)";
+                    userPassStatus.className = "text-cyan-400 font-bold mt-0.5";
+                    writeToTerminal(TERMINAL_TEXTS.decryptInit.split('\n')[1], false, 10);
+                }
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    adminPassStatus.textContent = "PASSED (ADMIN DECODE MATRIX)";
+                    adminPassStatus.className = "text-emerald-400 font-bold mt-0.5 text-glow-green";
+
+                    setTimeout(() => {
+                        terminalScreen.innerHTML = '';
+                        writeToTerminal(TERMINAL_TEXTS.classified, false, 12);
+                    }, 300);
+                }
+            }, 40);
+        }
+
+        // Event Listeners for Upload
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) processFileKey(file);
+        });
+
+        function handleCommand(cmdStr) {
+            const cmd = cmdStr.trim().toLowerCase();
+            if (!cmd) return;
+
+            const prefix = promptPrefix.textContent;
+            writeToTerminal([`${prefix} ${cmdStr}`], false, 0);
+
+            if (cmd === 'clear') {
+                terminalScreen.innerHTML = '';
+                return;
+            }
+
+            if (!STATE.isAdminUnlocked) {
+                writeToTerminal(TERMINAL_TEXTS.lockedError, false, 20);
+                audio.playDeny();
+                return;
+            }
+
+            switch (cmd) {
+                case 'help':
+                    writeToTerminal(TERMINAL_TEXTS.cmdHelp, false, 15);
+                    break;
+                case 'status':
+                    writeToTerminal(TERMINAL_TEXTS.cmdStatus, false, 15);
+                    break;
+                case 'staff_audit':
+                    writeToTerminal(TERMINAL_TEXTS.cmdStaff, false, 15);
+                    break;
+                case 'logs':
+                    writeToTerminal(TERMINAL_TEXTS.cmdLogs, false, 15);
+                    break;
+                case 'classified':
+                    writeToTerminal(TERMINAL_TEXTS.classified, false, 10);
+                    break;
+                case 'purge':
+                    purgeSession();
+                    break;
+                default:
+                    writeToTerminal([`COMMAND NOT RECOGNIZED: '${cmd}'. TYPE 'help' FOR LIST.`], false, 15);
+                    audio.playDeny();
+                    break;
+            }
+        }
+
+        function purgeSession() {
+            STATE.isAdminUnlocked = false;
+            STATE.currentRawHash = null;
+            STATE.currentPixelHash = null;
+            hashDisplay.textContent = "----------------------------------------------------------------";
+            clearanceBadge.textContent = "LOCKED";
+            clearanceBadge.className = "px-1.5 py-0.5 rounded bg-red-950 text-red-400 border border-red-800";
+            canvasOverlay.style.display = 'flex';
+            systemStatus.textContent = "SYS_LOCKED";
+            systemStatus.className = "text-red-400 font-bold";
+            statusDot.className = "inline-block w-2 h-2 rounded-full bg-red-500 animate-ping";
+            promptPrefix.textContent = "GUEST@TERMINAL-NODE:~#";
+            keyDimensions.textContent = "---";
+            decryptionBar.style.width = '0%';
+            progressPercent.textContent = '0%';
+            userPassStatus.textContent = "LOCKED";
+            userPassStatus.className = "text-red-400 font-bold mt-0.5";
+            adminPassStatus.textContent = "LOCKED";
+            adminPassStatus.className = "text-red-400 font-bold mt-0.5";
+            renderCorruptedTerminal();
+        }
+
+        sendCmdBtn.addEventListener('click', () => {
+            handleCommand(terminalInput.value);
+            terminalInput.value = '';
+        });
+
+        terminalInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                handleCommand(terminalInput.value);
+                terminalInput.value = '';
+            }
+        });
+
+        crtToggle.addEventListener('click', () => {
+            document.body.classList.toggle('crt');
+            audio.playBeep(700, 'sine', 0.03);
+        });
+
+        audioToggle.addEventListener('click', () => {
+            STATE.audioEnabled = !STATE.audioEnabled;
+            if (STATE.audioEnabled) {
+                audioLabel.textContent = "AUDIO: ON";
+                audioIcon.className = "fa-solid fa-volume-high";
+                audio.playBeep(800, 'sine', 0.05);
+            } else {
+                audioLabel.textContent = "AUDIO: OFF";
+                audioIcon.className = "fa-solid fa-volume-xmark";
+            }
+        });
+
+        window.onload = function() {
+            renderCorruptedTerminal();
+        };
+
+    </script>
+</body>
+</html>
